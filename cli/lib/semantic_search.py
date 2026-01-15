@@ -108,41 +108,8 @@ class SemanticSearch():
             self.embeddings_map = pickle.load(f)
             print("Embeddings map loaded from cache.")
 
-    
-def verify_model():
-    m = SemanticSearch() # initialize the model
-    print(f'Model loaded: {m.model}')
-    print(f'Max sequence length: {m.model.max_seq_length}')
-
-def embed_text(text):
-    m = SemanticSearch() # initialize the model
-    embedding = m.generate_embedding(text)
-    print(f"Text: {text}")
-    print(f"First 3 dimensions: {embedding[:3]}")
-    print(f"Dimensions: {embedding.shape[0]}")
-
-def verify_embeddings():
-    m = SemanticSearch()
-    documents = load_database()
-    m.load_or_create_embeddings(documents)
-    print(f"Number of docs:   {len(documents)}")
-    print(f"Embeddings shape: {m.embeddings.shape[0]} vectors in {m.embeddings.shape[1]} dimensions")
-
-def embed_query_text(query):
-    m = SemanticSearch()
-    embedded_query = m.generate_embedding(query)
-    print(f"Query: {query}")
-    print(f"First 5 dimensions: {embedded_query[:5]}")
-    print(f"Shape: {embedded_query.shape}")
-    return embedded_query
-
-def search_command(query, limit):
-    m = SemanticSearch()
-    documents = load_database()
-    m.load_or_create_embeddings(documents)
-    results = m.search(query, limit)
-    return results
-
+###------------TOOLS------------###
+#  Scoring of search results
 def cosine_similarity(vec1, vec2):
     dot_product = np.dot(vec1, vec2)
     norm1 = np.linalg.norm(vec1)
@@ -154,6 +121,49 @@ def cosine_similarity(vec1, vec2):
     else:
         return dot_product / (norm1 * norm2)
 
+###------------COMMANDS TO EXPLOIT SemanticSearch CLASS------------###
+# Command for use of SemanticSearch class: Check what model and parameters are used
+def verify_model():
+    m = SemanticSearch() # initialize the model
+    print(f'Model loaded: {m.model}')
+    print(f'Max sequence length: {m.model.max_seq_length}')
+
+# Command for use of SemanticSearch class: simple string embedding command (for debug and information)
+def embed_text(text):
+    m = SemanticSearch() # initialize the model
+    embedding = m.generate_embedding(text)
+    print(f"Text: {text}")
+    print(f"First 3 dimensions: {embedding[:3]}")
+    print(f"Dimensions: {embedding.shape[0]}")
+
+# Command for use of SemanticSearch class: load or create embeddings and print info
+def verify_embeddings():
+    m = SemanticSearch() # initialize the model
+    documents = load_database()
+    m.load_or_create_embeddings(documents)
+    print(f"Number of docs:   {len(documents)}")
+    print(f"Embeddings shape: {m.embeddings.shape[0]} vectors in {m.embeddings.shape[1]} dimensions")
+
+# Command for use of SemanticSearch class: take a query, embed it, and provide embedding characteristics (for debug and information)
+def embed_query_text(query):
+    m = SemanticSearch() # initialize the model
+    embedded_query = m.generate_embedding(query)
+    print(f"Query: {query}")
+    print(f"First 5 dimensions: {embedded_query[:5]}")
+    print(f"Shape: {embedded_query.shape}")
+    return embedded_query
+
+# Command for use of SemanticSearch class: semantic search command
+def search_command(query, limit):
+    m = SemanticSearch() # initialize the model
+    documents = load_database()
+    m.load_or_create_embeddings(documents)
+    results = m.search(query, limit)
+    return results
+
+
+###------------MANUAL TESTING------------###
+#NOTA: remove ".lib" from "from lib.search_utils import"
 # Test code
 #verify_embeddings()
 #documents = load_database()
