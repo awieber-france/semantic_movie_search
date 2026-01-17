@@ -1,8 +1,20 @@
 # Semantic Search of Movie Database
 ## 1) Introduction
-This code employs semantic search of a database of 5000 movies (or any database with identical structure). The *all-MiniLM-L6-v2* embeddings model from *sentece_transformers* is used to compare query vectors to combined title-description vectors.
+This code employs semantic search of a database of 5000 movies (or any database with identical structure). The *all-MiniLM-L6-v2* embeddings model from *sentece_transformers* is used to create query and database vectors. Top 10 matches are supplied by default. Two approaches are available:
+- Simple Semantic Search via "search" command
+   - Each movie entry is converted into a single vector
+   - Format of text that is embedded: "Title: Description"
+   - The query embedding is compared against each movie vectors
+   - Top movie results are provided
+- Advanced Semantic Search via "search_chunked" command
+   - The title is omitted from the embeddings
+   - The description is chunked by sentences and overlap is used to create multiple embeddings
+   - The query embedding is compared to each chunk embedding; the highest chunk score for a document is recorded
+   - Top movie results are provided
 
-Top 5 matches are supplied by default. Cosine similarity is used to rank the results.
+ Cosine similarity is used to rank the results:
+<p align="center"><img src="./images/cos_simil.svg"></p>
+
 
 ## 2) Requirements
 ### Virtual environment
@@ -29,7 +41,7 @@ This project should operate on any system capable of using the above uv and pyth
     - Modify the **load_database** function
     - Adjust the file name in the **DATA_PATH** variable
 
-## 3) Using the files
+## 3a) Using the files - Basic Semantic Search
 - Navigate to the local git project folder in a terminal
 - Build the cached database files for the first time (use later to verify):
     - **uv run cli/semantic_search_cli.py verify_embeddings**
@@ -39,6 +51,17 @@ This project should operate on any system capable of using the above uv and pyth
 - Call help function to get details of possible commands:
     - **uv run ./cli/semantic_search_cli.py --help**
     - **uv run cli/semantic_search_cli.py search --help**
+
+## 3b) Using the files - Advanced Semantic Search
+- Navigate to the local git project folder in a terminal
+- Build the cached database files for the first time (use later to verify):
+    - **uv run cli/semantic_search_cli.py embed_chunks**
+- Type a command, for example:
+    - **uv run cli/semantic_search_cli.py search_chunked "space adventure"** --limit 10
+- Go to cli/lib/search_utils.py to adjust the default search limit.
+- Call help function to get details of possible commands:
+    - **uv run ./cli/semantic_search_cli.py --help**
+    - **uv run cli/semantic_search_cli.py search_chunked --help**
 
 ## 4) References
 This project was developped while following an online course from boot.dev for retrieval augmented generation:<br>
