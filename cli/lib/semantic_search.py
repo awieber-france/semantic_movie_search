@@ -18,6 +18,8 @@ from lib.search_utils import (
     CHUNK_METADATA_PATH,
     )
 
+###------------SEMANTIC SEARCH METHODS (BASIC AND ADVANCED)------------###
+
 # Basic semantic search where title + description are converted to a single embedding
 class SemanticSearch():
     def __init__(self, model_name = 'all-MiniLM-L6-v2'):
@@ -302,6 +304,7 @@ def cosine_similarity(vec1, vec2):
     else:
         return dot_product / (norm1 * norm2)
     
+# Regex splitting (and begin/end whitespace removal) of a string
 def regex_split(text, pattern: str | re.Pattern | None = r"(?<=[.!?])\s+"):
     #pattern=r"(?<=[.!?])(?!\d)\s+" (decimal treatment)
     # If None is passed, return text in list
@@ -385,41 +388,19 @@ def search_chunked_command(query, limit):
 
 ###------------MANUAL TESTING------------###
 #NOTA: remove ".lib" from "from lib.search_utils import"
-# Test code
-#verify_embeddings()
-#documents = load_database()
-#m = SemanticSearch()
-#embeddings = m.build_embeddings(documents[:10])
-#embeddings = m.build_embeddings(documents)
-#m.save_embeddings()
-#m.open_embeddings()
-#m.load_or_create_embeddings(documents)
-#query = "funny bear movies"
-#results = m.search(query)
-#for item in results:
-#    print(item.get('title'))
-#print(results)
-#print(m.embeddings)
+"""
+# Build new basic cache
+documents = load_database()
+m = SemanticSearch()
+m.build_embeddings(documents)
 
+# Build new chunked cache
+documents = load_database()
+m = ChunkedSemanticSearch()
+m.build_chunk_embeddings(documents)
 
-#m = SemanticSearch()
-#text = "First sentence here. Second sentence here. Third sentence here. Fourth sentence here."
-#chunks = m.semantic_chunk(text, max_chunk_size=2, overlap=1)
-#for chunk in chunks:
-#    print("##############")
-#    print(chunk)
-
-#m = ChunkedSemanticSearch()
-#documents = load_database()
-#embeddings = m.load_or_create_chunk_embeddings(documents)
-#m.search_chunks(query='superhero action movie')
-#print(embeddings)
-#embed_chunks_command()
-#query='superhero action movie'
-#search_chunked_command(query, limit=10)
-
-#text = 'Text without punctuation'
-#text = 'Hello world. And more stuff'
-#text = " A hero rises. The world needs saving."
-#result = regex_split(text)
-#print(result)
+# Run queries
+query='superhero action movie'
+search_command(query, limit=10)
+search_chunked_command(query, limit=10)
+"""
